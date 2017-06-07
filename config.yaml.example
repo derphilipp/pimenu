@@ -1,0 +1,7 @@
+# Pimenu configuration file
+#
+# resolution should be set in the form of
+# resolution: "320x200"
+#
+---
+resolution: "800x480"

@@ -1,18 +1,22 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 from math import sqrt, floor, ceil
 import os
 import subprocess
 import yaml
-import Tkconstants as TkC
-from Tkinter import Tk, Frame, Button, Label, PhotoImage
+import tkinter.constants as TkC
+from tkinter import Tk, Frame, Button, Label, PhotoImage
 import sys
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 
 class FlatButton(Button):
     def __init__(self, master=None, cnf={}, **kw):
         Button.__init__(self, master, cnf, **kw)
-        # self.pack()
         self.config(
             compound=TkC.TOP,
             relief=TkC.FLAT,
@@ -21,9 +25,9 @@ class FlatButton(Button):
             fg="white",
             activebackground="#b91d47",  # dark-red
             activeforeground="white",
-            # height=118,
-            #width=104,
-            highlightthickness=0
+            highlightthickness=0,
+            font=("Droid Sans Mono", "16")
+
         )
 
     def set_color(self, color):
@@ -205,9 +209,21 @@ class PiMenu(Frame):
         self.show_top()
 
 
+def load_resolution():
+    try:
+        path= os.path.dirname(os.path.realpath(sys.argv[0]))
+        with open(path + '/config.yaml', 'r') as f:
+            config = yaml.load(f)
+            return config['resolution']
+    except IOError:
+        eprint("Warning: Configuration file not found")
+        eprint("Falling back to 320x200")
+        return "320x200"
+
 def main():
+    resolution = load_resolution()
     root = Tk()
-    root.geometry("320x240")
+    root.geometry(resolution)
     root.wm_title('PiMenu')
     if len(sys.argv) > 1 and sys.argv[1] == 'fs':
         root.wm_attributes('-fullscreen', True)
